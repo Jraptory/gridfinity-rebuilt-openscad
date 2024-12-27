@@ -7,7 +7,7 @@ h_bot = 2.2;
 /**
  * @brief Size of a single gridfinity unit. [Length, Width] In millimeters.
  */
-GRID_DIMENSIONS_MM = [42, 42];
+GRID_DIMENSIONS_MM = [40, 40];
 
 /**
  * @deprecated Use GRID_DIMENSIONS_MM instead.
@@ -166,7 +166,7 @@ BASE_TOP_RADIUS = r_base;
  * @Details Each unit's base is 41.5mm x 41.5mm
  *          Leaving 0.5mm gap with an l_grid of 42
  */
-BASE_TOP_DIMENSIONS = [41.5, 41.5];
+BASE_TOP_DIMENSIONS = [GRID_DIMENSIONS_MM[0]-0.5, GRID_DIMENSIONS_MM[1]-0.5];
 
 /**
  * @Summary Maximum [x,y] values/size of the base.

@@ -18,7 +18,7 @@ $fa = 8;
 $fs = 0.25;
 
 /* [Bin or Base] */
-type = 1; // [0:bin, 1:base]
+type = 0; // [0:bin, 1:base]
 
 /* [Printer Settings] */
 // extrusion width (walls will be twice this size)

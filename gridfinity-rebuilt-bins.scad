@@ -73,7 +73,7 @@ enable_zsnap = false;
 
 /* [Features] */
 // the type of tabs
-style_tab = 1; //[0:Full,1:Auto,2:Left,3:Center,4:Right,5:None]
+style_tab = 5; //[0:Full,1:Auto,2:Left,3:Center,4:Right,5:None]
 // which divisions have tabs
 place_tab = 0; // [0:Everywhere-Normal,1:Top-Left Division]
 // how should the top lip act
@@ -83,11 +83,11 @@ scoop = 1; //[0:0.1:1]
 
 /* [Base Hole Options] */
 // only cut magnet/screw holes at the corners of the bin to save uneccesary print time
-only_corners = false;
+only_corners = true;
 //Use gridfinity refined hole style. Not compatible with magnet_holes!
-refined_holes = true;
+refined_holes = false;
 // Base will have holes for 6mm Diameter x 2mm high magnets.
-magnet_holes = false;
+magnet_holes = true;
 // Base will have holes for M3 screws.
 screw_holes = false;
 // Magnet holes will have crush ribs to hold the magnet.

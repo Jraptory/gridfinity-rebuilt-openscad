@@ -19,9 +19,9 @@ $fs = 0.25;
 
 /* [General Settings] */
 // number of bases along x-axis
-gridx = 1;
+gridx = 4;
 // number of bases along y-axis
-gridy = 1;
+gridy = 3;
 
 /* [Screw Together Settings - Defaults work for M3 and 4-40] */
 // screw diameter
@@ -63,7 +63,33 @@ crush_ribs = true;
 // Magnet holes will have a chamfer to ease insertion.
 chamfer_holes = true;
 
-hole_options = bundle_hole_options(refined_hole=false, magnet_hole=enable_magnet, screw_hole=false, crush_ribs=crush_ribs, chamfer=chamfer_holes, supportless=false);
+screw_hole = true;
+
+hole_options = bundle_hole_options(refined_hole=false, magnet_hole=enable_magnet, screw_hole=screw_hole, crush_ribs=crush_ribs, chamfer=chamfer_holes);
+
+enable_base = true;
+/* [Base Hole Options] */
+// only cut magnet/screw holes at the corners of the bin to save uneccesary print time
+base_only_corners = true;
+//Use gridfinity refined hole style. Not compatible with magnet_holes!
+base_refined_holes = false;
+// Base will have holes for 6mm Diameter x 2mm high magnets.
+base_magnet_holes = false;
+// Base will have holes for M3 screws.
+base_screw_holes = false;
+// Magnet holes will have crush ribs to hold the magnet.
+base_crush_ribs = true;
+// Magnet/Screw holes will have a chamfer to ease insertion.
+base_chamfer_holes = true;
+// Magnet/Screw holes will be printed so supports are not needed.
+base_printable_hole_top = true;
+// Enable "gridfinity-refined" thumbscrew hole in the center of each base: https://www.printables.com/model/413761-gridfinity-refined
+base_enable_thumbscrew = false;
+base_supportless = false;
+
+base_hole_options = bundle_hole_options(base_refined_holes, base_magnet_holes, base_screw_holes, base_crush_ribs, base_chamfer_holes, base_printable_hole_top, supportless=base_supportless);
+
+
 
 // ===== IMPLEMENTATION ===== //
 
@@ -187,6 +213,30 @@ module gridfinityBaseplate(grid_size_bases, length, min_size_mm, sp, hole_option
                         } else if (sh == 2) {
                             cutter_counterbore();
                         }
+                    }
+                }
+            }
+
+            // Add the bottom part of the bins to the baseplate
+            if (enable_base) {
+                difference() {
+                    translate([0, 0, -BASE_HEIGHT])
+                    gridfinityBase([grid_size.x, grid_size.y], hole_options=base_hole_options, only_corners=base_only_corners, thumbscrew=base_enable_thumbscrew);
+                    
+                    pattern_linear(grid_size.x, grid_size.y, length) {
+                        through_all = false;
+                        
+                        translate([0,0,-BASE_HEIGHT])
+                        linear_extrude((BASE_HEIGHT))
+                        profile_skeleton_base();
+                    }
+
+                    pattern_linear(grid_size.x, grid_size.y, length) {
+                        through_all = false;
+                        
+                        translate([0,0,-BASE_HEIGHT/2])
+                        linear_extrude((BASE_HEIGHT))
+                        profile_skeleton();
                     }
                 }
             }
@@ -381,6 +431,18 @@ module profile_skeleton(size=l_grid) {
     l = size - 2*BASEPLATE_LIP_MAX.x;
 
     offset(r_skel)
+    difference() {
+        square(l-2*r_skel, center = true);
+
+        hole_pattern()
+        offset(MAGNET_HOLE_RADIUS+r_skel+2)
+        square([l,l]);
+    }
+}
+module profile_skeleton_base(size=l_grid) {
+    l = size - 2*BASEPLATE_LIP_MAX.x - 1;
+
+    offset(r_skel-1)
     difference() {
         square(l-2*r_skel, center = true);
 
